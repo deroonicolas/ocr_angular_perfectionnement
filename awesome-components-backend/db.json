@@ -166,16 +166,6 @@
   ],
   "candidates": [
     {
-      "id": 2,
-      "firstName": "Sharline",
-      "lastName": "Albasini",
-      "email": "salbasini1@imdb.com",
-      "job": "GIS Technical Architect",
-      "department": "Legal",
-      "company": "Mraz LLC",
-      "imageUrl": "https://i.pravatar.cc/100?img=2"
-    },
-    {
       "id": 3,
       "firstName": "Mignonne",
       "lastName": "Lampel",
