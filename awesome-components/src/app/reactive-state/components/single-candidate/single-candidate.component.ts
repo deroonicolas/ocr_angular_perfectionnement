@@ -50,6 +50,6 @@ export class SingleCandidateComponent {
   }
 
   onHire() {
-    throw new Error('Method not implemented.');
+    throw new Error('Method not implemented yet.');
   }
 }
