@@ -114,6 +114,30 @@ export class CandidatesService {
       .subscribe();
   }
 
+  /**
+  * 1. this.candidates$.pipe(
+    this.candidates$ représente une observable contenant la liste actuelle des candidats.
+    pipe() permet d'appliquer une série d'opérateurs RxJS sur cette observable pour effectuer des transformations, filtrages ou actions sur le flux de données.
+    2. take(1)
+    Cet opérateur permet de prendre une seule émission de la liste des candidats et de se désabonner immédiatement après.
+    Cela signifie que nous récupérons la liste actuelle des candidats une seule fois et que nous n'écoutons pas les futures émissions.
+    3. map(candidates => candidates.map(candidate => candidate.id === id ? { ...candidate, company: 'Snapface Ltd' } : candidate))
+    map() est un opérateur qui permet de transformer les données dans le flux.
+    Ici, on parcourt la liste des candidats avec un map() interne :
+    Si l'id du candidat correspond à l'id fourni, on retourne un nouvel objet candidat (en utilisant l'opérateur spread { ...candidate }) mais en modifiant son champ company avec la valeur "Snapface Ltd".
+    Si l'id ne correspond pas, on retourne simplement le candidat tel quel, sans modification.
+    Ainsi, cette transformation retourne une nouvelle liste où seul le candidat correspondant à l'id est modifié.
+    4. tap(updatedCandidates => this._candidates$.next(updatedCandidates))
+    tap() est utilisé pour exécuter une action secondaire sans modifier les données dans le flux.
+    Ici, l'action consiste à mettre à jour l'observable privée _candidates$ avec la nouvelle liste de candidats updatedCandidates. Cela permet d'émettre cette nouvelle liste à toutes les parties de l'application qui sont abonnées à candidates$.
+    5. switchMap(updatedCandidates => this.http.patch(...)
+    switchMap() est utilisé pour transformer le flux en une nouvelle observable (ici, une requête HTTP).
+    Cela signifie que, après avoir mis à jour la liste localement, nous faisons une requête HTTP PATCH pour envoyer les modifications du candidat au serveur.
+    La requête PATCH est faite à l'URL spécifique du candidat (${environment.apiUrl}/candidates/${id}), en passant uniquement les données du candidat qui a été modifié via updatedCandidates.find(candidate => candidate.id === id).
+    6. subscribe()
+    subscribe() est nécessaire pour lancer toute la chaîne d'observables. Sans l'abonnement, aucune action ne serait réellement exécutée.
+    Une fois que la requête PATCH est envoyée, si elle réussit ou échoue, nous pourrions gérer les résultats ou erreurs, mais dans ce cas précis, il n'y a pas de gestion explicite des erreurs ou du succès.
+   */
   hireCandidate(id: number): void {
     this.candidates$
       .pipe(
